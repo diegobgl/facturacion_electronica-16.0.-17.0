@@ -172,7 +172,7 @@
       ]"/>
     </record>
 
-    <record id="IVAC_19" model="account.tax.template">
+    <record id="IVAC_19" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">IVA 19% Compra</field>
       <field name="description">IVA 19% Compra</field>
@@ -209,7 +209,7 @@
         ]"/>
     </record>
 
-    <record id="IVAV_17" model="account.tax.template">
+    <record id="IVAV_17" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">IVA 19% Venta (Faenamiento Carnes)</field>
       <field name="description">IVA 19% Venta</field>
@@ -260,7 +260,7 @@
       ]"/>
     </record>
 
-    <record id="IVAV_18" model="account.tax.template">
+    <record id="IVAV_18" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">IVA 19% Venta (Carnes)</field>
       <field name="description">IVA 19% Venta</field>
@@ -311,7 +311,7 @@
       ]"/>
     </record>
 
-    <record id="I_IU2C" model="account.tax.template">
+    <record id="I_IU2C" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Unico de Segunda Categoría</field>
       <field name="description">Impuesto Unico de 2da Categoría</field>
@@ -349,7 +349,7 @@
         ]"/>
     </record>
 
-    <record id="retencion_iva" model="account.tax.template">
+    <record id="retencion_iva" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Retención Total IVA</field>
       <field name="description">Retención</field>
@@ -388,7 +388,7 @@
         ]"/>
     </record>
 
-    <record id="credec_compra" model="account.tax.template">
+    <record id="credec_compra" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Crédito Empresa Constructora Compras</field>
       <field name="description">19</field>
@@ -441,7 +441,7 @@
         ]"/>
     </record>
 
-    <record id="credec_venta" model="account.tax.template">
+    <record id="credec_venta" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Crédito Empresa Constructora Ventas</field>
       <field name="description">19</field>
@@ -494,7 +494,7 @@
       ]"/>
     </record>
 
-    <record id="exento_compra" model="account.tax.template">
+    <record id="exento_compra" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Exento Compra</field>
       <field name="description">Exento</field>
@@ -505,7 +505,7 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record id="exento_venta" model="account.tax.template">
+    <record id="exento_venta" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Exento Venta</field>
       <field name="description">Exento</field>
@@ -516,7 +516,7 @@
       <field name="sequence" eval="2"/>
     </record>
 
-    <record id="especifico_compra" model="account.tax.template">
+    <record id="especifico_compra" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Específico Compra</field>
       <field name="description">Especifico</field>
@@ -527,7 +527,7 @@
       <field name="sequence" eval="5"/>
     </record>
 
-    <record id="iva_activo_fijo" model="account.tax.template">
+    <record id="iva_activo_fijo" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Activo Fijo</field>
       <field name="description">19%</field>
@@ -539,7 +539,7 @@
       <field name="sequence" eval="6"/>
     </record>
 
-    <record id="ila_compra" model="account.tax.template">
+    <record id="ila_compra" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">ILA (Licores, Piscos, Destilados, etc.) Vinos Compras</field>
       <field name="description">ILA 27%</field>
@@ -550,7 +550,7 @@
       <field name="sequence" eval="7"/>
     </record>
 
-    <record id="ila_vinos_compra" model="account.tax.template">
+    <record id="ila_vinos_compra" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">ILA Vinos Compras</field>
       <field name="description">ILA 15%</field>
@@ -561,7 +561,7 @@
       <field name="sequence" eval="8"/>
     </record>
 
-    <record id="cervezas_compra" model="account.tax.template">
+    <record id="cervezas_compra" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Cervezas y bebidas alcohólicas Compras</field>
       <field name="description">15%</field>
@@ -572,7 +572,7 @@
       <field name="sequence" eval="8"/>
     </record>
 
-    <record id="especifico_compra_diesel" model="account.tax.template">
+    <record id="especifico_compra_diesel" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Específico Diesel - Compra</field>
       <field name="description">Especifico</field>
@@ -583,7 +583,7 @@
       <field name="sequence" eval="9"/>
     </record>
 
-    <record id="especifico_venta_diesel" model="account.tax.template">
+    <record id="especifico_venta_diesel" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Específico Diesel - Venta</field>
       <field name="description">Especifico Diesel</field>
@@ -596,7 +596,7 @@
       <field name="mepco">diesel</field>
     </record>
 
-    <record id="especifico_venta_gasolina_93" model="account.tax.template">
+    <record id="especifico_venta_gasolina_93" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Específico Gasolina 93 - Venta</field>
       <field name="description">Especifico Gasolina 93</field>
@@ -609,7 +609,7 @@
       <field name="mepco">gasolina_93</field>
     </record>
 
-    <record id="especifico_venta_gasolina_97" model="account.tax.template">
+    <record id="especifico_venta_gasolina_97" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Específico Gasolina 97 - Venta</field>
       <field name="description">Especifico Gasolina 97</field>
@@ -622,7 +622,7 @@
       <field name="mepco">gasolina_97</field>
     </record>
 
-    <record id="especifico_compra_gasolina" model="account.tax.template">
+    <record id="especifico_compra_gasolina" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Específico Gasolina - Compra</field>
       <field name="description">Específico Gasolina</field>
@@ -633,7 +633,7 @@
       <field name="sequence" eval="10"/>
     </record>
 
-    <record id="especifico_art_42_d" model="account.tax.template">
+    <record id="especifico_art_42_d" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Art. 42, letra D y E</field>
       <field name="description">Art. 42, letra D y E</field>
@@ -644,7 +644,7 @@
       <field name="sequence" eval="11"/>
     </record>
 
-    <record id="especifico_art_42_c" model="account.tax.template">
+    <record id="especifico_art_42_c" model="account.tax">
       <field name="chart_template_id" ref="cl_chart_template_sii"/>
       <field name="name">Impuesto Art. 42, letra C</field>
       <field name="description">Art. 42, letra C</field>

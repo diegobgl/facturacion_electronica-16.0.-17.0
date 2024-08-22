@@ -4,7 +4,7 @@ import math
 
 
 class AccountTaxTemplate(models.Model):
-    _inherit = 'account.tax.template'
+    _inherit = 'account.tax'
 
     sii_code = fields.Integer(
             string='SII Code',
