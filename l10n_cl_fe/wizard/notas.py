@@ -50,9 +50,18 @@ class AccountMoveReversal(models.TransientModel):
             domain=lambda self: self._dominio_nc(),
         )
     refund_method = fields.Selection(
+        [
+            ('refund', 'Create a draft credit note'),
+            ('cancel', 'Cancel: create a draft credit note and reconcile'),
+            ('modify', 'Modify: create a draft credit note, reconcile and create a new draft invoice'),
+        ],
         selection_add=[("cl_refund", 'Rectificativa modo chileno')],
-        ondelete={'cl_refund': 'cascade'}
+        ondelete={'cl_refund': 'cascade'},
+        string='Refund Method',
+        required=True,
+        help='Refund method used for this operation.'
     )
+
     cl_refund = fields.Selection(
             [
                 ('1', 'Anula Documento de Referencia'),
