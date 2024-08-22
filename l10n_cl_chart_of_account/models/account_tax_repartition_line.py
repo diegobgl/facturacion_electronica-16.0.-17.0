@@ -3,7 +3,7 @@ from odoo import api, models, fields, Command, _
 
 
 class AccountTaxRepartitionLineTemplate(models.Model):
-    _inherit = "account.tax.repartition.line.template"
+    _inherit = "account.tax.repartition.line"
 
     sii_type = fields.Selection(
         [
