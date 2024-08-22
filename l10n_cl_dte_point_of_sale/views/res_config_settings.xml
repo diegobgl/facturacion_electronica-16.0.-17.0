@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.point_of_sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <div id="pos_accounting_section" position="after">
+              <h2>Facturación Electrónica</h2>
+              <div class="row mt16 o_settings_container col-12" id="pos_electronic_invoice_section">
+                <div class="o_setting_right_pane">
+                    <h3>Opciones para Factura Electrónica</h3>
+                    <div class="text-muted" id="facturas_label">
+                       Permite habilitar la emisión Facturas tributarias en este PdV, si ninguna de estas está marcada, se asume factura NO tributaria
+                    </div>
+                    <div class="content-group mt16" >
+                        <div class="row mt16">
+                            <label string="Habilitar Facturas Afecta" for="pos_habilita_factura_afecta" class="col-md-3 o_light_label"/>
+                            <field name="pos_habilita_factura_afecta"/>
+                            <t attrs="{'invisible': [('pos_habilita_factura_afecta', '=', False)]}">
+                                <t attrs="{'invisible': [('pos_secuencia_factura', '=', False)]}">
+                                    <label string="Secuencia" for="pos_secuencia_factura" class="col-md-2 o_light_label"/>
+                                    <field name="pos_secuencia_factura" />
+                                </t>
+                                <div class="col-md-3" attrs="{'invisible': [('pos_secuencia_factura', '!=', False)]}">No existe secuencia</div>
+                            </t>
+                        </div>
+                        <div class="row mt16">
+                          <label string="Habilitar Facturas Exenta" for="pos_habilita_factura_exenta" class="col-md-3 o_light_label"/>
+                          <field name="pos_habilita_factura_exenta"/>
+                          <t attrs="{'invisible': [('pos_habilita_factura_exenta', '=', False)]}">
+                              <t attrs="{'invisible': [('pos_secuencia_factura_exenta', '=', False)]}">
+                                  <label string="Secuencia" for="pos_secuencia_factura_exenta" class="col-md-2 o_light_label"/>
+                                  <field name="pos_secuencia_factura_exenta"/>
+                              </t>
+                              <div class="col-md-3" attrs="{'invisible': [('pos_secuencia_factura_exenta', '!=', False)]}">No existe secuencia</div>
+                          </t>
+                        </div>
+                        <div class="row mt16">
+                          <label string="Habilitar Nota de Crédito" for="pos_habilita_nc" class="col-md-3 o_light_label"/>
+                          <field name="pos_habilita_nc"/>
+                          <t attrs="{'invisible': [('pos_habilita_nc', '=', False)]}">
+                            <t attrs="{'invisible': [('pos_secuencia_nc', '=', False)]}">
+                              <label string="Secuencia" for="pos_secuencia_nc" class="col-md-2 o_light_label"/>
+                              <field name="pos_secuencia_nc"/>
+                            </t>
+                              <div class="col-md-3" attrs="{'invisible': [('pos_secuencia_nc', '!=', False)]}">No existe secuencia</div>
+                          </t>
+                        </div>
+                        <div class="row mt16">
+                            <label string="¿Facturas en formato Ticket?" for="pos_ticket" class="col-md-3 o_light_label"/>
+                            <field name="pos_ticket" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="iface_boleta">
+                    <div class="o_setting_right_pane">
+                        <h3>Secuencias de Boleta</h3>
+                        <div class="text-muted" id="boletas_label">
+                           Imprimir Boletas
+                        </div>
+                        <div class="content-group mt16">
+                            <div class="row mt16">
+                                <label string="Modo Restauración" for="pos_restore_mode" class="col-md-3 o_light_label"/>
+                                <field name="pos_restore_mode"/>
+                            </div>
+                            <div class="row mt16">
+                                <label string="Secuencias de Boleta" for="pos_secuencia_boleta" class="col-md-3 o_light_label"/>
+                                <field name="pos_secuencia_boleta"
+                                       domain="[('sii_document_class_id.sii_code', 'in', [39]), ('company_id', '=', company_id)]" />
+                            </div>
+                            <div class="row mt16">
+                              <label string="Secuencias de Boleta Exenta" for="pos_secuencia_boleta_exenta" class="col-md-3 o_light_label"/>
+                              <field name="pos_secuencia_boleta_exenta"
+                                        domain="[('sii_document_class_id.sii_code', 'in', [41])]" />
+                            </div>
+                            <div class="row mt16">
+                                <label string="Marcar por defecto" for="pos_marcar" class="col-md-3 o_light_label"/>
+                                <field name="pos_marcar" widget="radio" />
+                            </div>
+                            <div class="row mt16">
+                              <field name="pos_company_activity_ids" widget="many2many_tags" invisible="1"/>
+                              <label string="Actecos del PdV" for="pos_acteco_ids" />
+                              <field name="pos_acteco_ids"
+                                widget="many2many_tags"
+                                options="{'no_create': True}"
+                                domain="[('id', 'in', pos_company_activity_ids)]"
+                                placeholder="Giros del PdV"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="iface_guia">
+                    <div class="o_setting_right_pane">
+                        <h3>Emitir Guías de Despacho</h3>
+                        <div class="text-muted" id="guia_label">
+                           Opciones para la emisión de guía de desapacho electrónica
+                        </div>
+                        <div class="content-group mt16">
+                          <div class="row mt16">
+                              <label string="Emitir Guías de despacho Electrónica" for="pos_dte_picking" class="col-md-3 o_light_label"/>
+                              <field name="pos_dte_picking"/>
+                          </div>
+                          <t attrs="{'invisible': [('pos_dte_picking', '=', False)]}">
+                              <div class="row mt16" attrs="{'invisible': [('pos_dte_picking', '=', False)]}">
+                                  <label string="¿Formato Ticket?" for="pos_dte_picking_ticket" class="col-md-3 o_light_label"/>
+                                  <field name="pos_dte_picking_ticket"/>
+                              </div>
+                              <div class="row mt16">
+                                  <label string="Secuencia de folios" for="pos_dte_picking_sequence" class="col-md-3 o_light_label"/>
+                                  <field name="pos_dte_picking_sequence" readonly="1"/>
+                              </div>
+                              <div class="row mt16">
+                                  <label string="Discriminar por tipo de orden" for="pos_dte_picking_option" class="col-md-3 o_light_label"/>
+                                  <field name="pos_dte_picking_option"/>
+                              </div>
+                              <div class="row mt16">
+                                  <label string="Indicador Tipo de Movimiento" for="pos_dte_picking_move_type" class="col-md-3 o_light_label"/>
+                                  <field name="pos_dte_picking_move_type" />
+                              </div>
+                              <div class="row mt16">
+                                  <label string="Indicador Tipo de Traslado" for="pos_dte_picking_transport_type" class="col-md-3 o_light_label"/>
+                                  <field name="pos_dte_picking_transport_type" />
+                              </div>
+                          </t>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </field>
+    </record>
+</odoo>

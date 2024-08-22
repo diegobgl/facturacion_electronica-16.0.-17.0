@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_sii_code_form" model="ir.ui.view">
+        <field name="name">account.tax.sii.code.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="sii_code" />
+                <field name="no_rec" />
+                <field name="activo_fijo" />
+                <field name="sii_detailed" />
+                <field name="mepco" />
+                <field name="uom_id" />
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_tax_sii_code_tree" model="ir.ui.view">
+        <field name="name">account.tax.sii.code.tree</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="sii_code" />
+                <field name="no_rec" />
+                <field name="activo_fijo" />
+            </field>
+        </field>
+    </record>
+
+    <record id="tax_repartition_line_tree" model="ir.ui.view">
+        <field name="name">tax_repartition_line_tree.tree</field>
+        <field name="model">account.tax.repartition.line</field>
+        <field name="inherit_id" ref="account.tax_repartition_line_tree" />
+        <field name="arch" type="xml">
+            <field name="account_id" position="before">
+                <field name="sii_type" />
+                <field name="credec" />
+            </field>
+        </field>
+    </record>
+</odoo>

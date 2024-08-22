@@ -1,0 +1,7 @@
+facturacion_electronica>=0.17.19
+num2words
+xlsxwriter
+pillow
+requests
+PyMuPDF
+pip>=20.0.2

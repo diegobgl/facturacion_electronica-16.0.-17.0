@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sii_dte_pdv_masive_send_wizard_form" model="ir.ui.view">
+            <field name="name">SII WS Consult Wizard form</field>
+            <field name="model">sii.dte.pos.masive_send.wizard</field>
+            <field name="arch" type="xml">
+                <form string="SII DTE masive send Wizard">
+                    <group>
+                        <field name="documentos" widget="one2many">
+                          <tree string="DTes a enviar" editable="top/bottom">
+                            <field name="sii_batch_number" widget="handle" />
+                            <field name="state" invisible="True"/>
+                            <field name="sii_document_number" />
+                            <field name="amount_total" />
+                          </tree>
+                        </field>
+                        <field name="set_pruebas" />
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="confirm" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pos_orders_send" model="ir.actions.act_window">
+            <field name="name">Enviar Documentos del PdV al SII</field>
+            <field name="res_model">sii.dte.pos.masive_send.wizard</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="sii_dte_pdv_masive_send_wizard_form"/>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+            <field name="binding_model_id" ref="point_of_sale.model_pos_order" />
+            <field name="binding_view_types">list</field>
+            <field name="binding_type">action</field>
+        </record>
+    </data>
+</odoo>

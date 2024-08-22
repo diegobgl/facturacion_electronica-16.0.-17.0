@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pos_order_referencias_manager,pos_order_referencias_manager,model_pos_order_referencias,account.group_account_manager,1,1,1,1
+access_pos_order_referencias_user,pos_order_referencias_user,model_pos_order_referencias,,1,1,1,1
+access_pos_order_refund,pos_order_refund,model_pos_order_refund,point_of_sale.group_pos_user,1,1,1,1
+access_sii_dte_pos_masive_send_wizard,access_sii_dte_pos_masive_send_wizard,model_sii_dte_pos_masive_send_wizard,point_of_sale.group_pos_user,1,1,1,1
+access_sii_document_class_pos_user,sii.document_class.user,l10n_cl_fe.model_sii_document_class,point_of_sale.group_pos_user,1,0,0,0

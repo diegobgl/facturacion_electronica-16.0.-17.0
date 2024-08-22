@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="dte_view_tree" model="ir.ui.view">
+        <field name="name">dte.tree</field>
+        <field name="model">mail.message.dte</field>
+        <field name="arch" type="xml">
+            <tree string="Dtes">
+              <field string="Creado en" name="create_date" optional="show"/>
+              <field string="Creado por" name="create_uid" optional="hide"/>
+              <field name="name" optional="show"/>
+              <field name="document_ids" optional="show"/>
+              <field name="company_id" optional="hide"/>
+              <field string="Last Update" name="write_date" optional="hide"/>
+              <field string="Actualizado por" name="write_uid" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+    <record id="dte_view_tree_select" model="ir.ui.view">
+        <field name="name">dte.tree.select</field>
+        <field name="model">mail.message.dte</field>
+        <field name="arch" type="xml">
+          <search string="Search">
+            <group expand="0" string="Group By">
+                <filter string="Create Date" name="create_date" context="{'group_by':'create_date'}"/>
+                <filter string="Creado por" name="created_by" context="{'group_by':'create_uid'}"/>
+                <filter string="Name" name="name" context="{'group_by':'name'}"/>
+                <filter string="Adjunto Principal" name="main_attachment" context="{'group_by':'message_main_attachment_id'}"/>
+                <filter string="Mail" name="mail" context="{'group_by':'mail_id'}"/>
+            </group>
+          </search>
+        </field>
+    </record>
+    <record id="dte_document_view_tree" model="ir.ui.view">
+        <field name="name">dte.document.tree</field>
+        <field name="model">mail.message.dte.document</field>
+        <field name="arch" type="xml">
+            <tree string="Documentos" decoration-info="state == 'draft'" decoration-muted="state == 'rejected'">
+                <field name="date" optional="show"/>
+                <field name="document_class_id" optional="show"/>
+                <field name="number" optional="show"/>
+                <field name="new_partner" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="amount" optional="show"/>
+                <field name="currency_id" optional="show"/>
+                <field name="invoice_line_ids" optional="show"/>
+                <field name="company_id" optional="show"/>
+                <field name="action" />
+                <field name="state" optional="show"/>
+                <field name="create_date" optional="hide"/>
+                <field name="create_uid" optional="hide"/>
+                <field name="write_date" optional="hide"/>
+                <field name="write_uid" optional="hide"/>
+                <button
+                    name="accept_document"
+                    string="Aceptar"
+                    type="object"
+                    attrs="{'invisible':[('state', '!=', 'draft')]}"
+                />
+                <button
+                    name="reject_document"
+                    string="Rechazar"
+                    type="object"
+                    attrs="{'invisible':[('state', '!=', 'draft')]}"
+                />
+                <button
+                    name="%(l10n_cl_fe.action_validar_wizard)d"
+                    type='action'
+                    string='Reclamo Avanzado'
+                    attrs="{'invisible': [('state', '!=', 'draft')]}"
+                    context="{'default_tipo': 'mail.message.dte.document'}"
+                />
+            </tree>
+        </field>
+    </record>
+    <record id="dte_view_form" model="ir.ui.view">
+        <field name="name">dte.form</field>
+        <field name="model">mail.message.dte</field>
+        <field name="arch" type="xml">
+            <form string="Mail DTE Process">
+                <header>
+                    <button name="pre_process" string="Pre Procesar Mensaje" type="object" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="mail_id" />
+                        <field name="company_id" />
+                        <field name="xml_id" domain="[('res_model', '=', active_id), ('res_model', '=', 'mail.message.dte')]"/>
+                    </group>
+                    <notebook>
+                        <page string="Documentos">
+                            <field name="document_ids" editable="bottom" widget="one2many">
+                                <tree editable="top/bottom">
+                                    <field name="id_dte" optional="show"/>
+                                    <field name="date" />
+                                    <field name="document_class_id" />
+                                    <field name="number" />
+                                    <field name="new_partner" />
+                                    <field name="partner_id" />
+                                    <field name="dte_id" invisible="True" />
+                                    <field name="amount" />
+                                    <field name="currency_id" />
+                                    <field name="invoice_line_ids" options="{'no_create_edit':True}" />
+                                    <field name="company_id" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="dte_document_view_form" model="ir.ui.view">
+        <field name="name">dte.document.form</field>
+        <field name="model">mail.message.dte.document</field>
+        <field name="arch" type="xml">
+            <form string="Mail DTE Process">
+                <header>
+                    <field name='state' widget="statusbar" />
+                    <button
+                        name="process_document"
+                        string="Procesar Documento"
+                        type="object"
+                        attrs="{'invisible':[('state', '=', 'draft')]}"
+                    />
+                    <button
+                        name="accept_document"
+                        string="Aceptar"
+                        type="object"
+                        attrs="{'invisible':[('state', '!=', 'draft')]}"
+                    />
+                    <button
+                        name="reject_document"
+                        string="Rechazar"
+                        type="object"
+                        attrs="{'invisible':[('state', '!=', 'draft')]}"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="dte_id" />
+                            <field name="id_dte" />
+                            <field name="date" />
+                            <field name="new_partner" />
+                            <field name="partner_id" />
+                            <field name="number" />
+                            <field name="document_class_id" />
+                            <field name="journal_id" />
+                        </group>
+                        <group>
+                           <field name="action" />
+                            <field name="amount" />
+                            <field name="monto_no_facturable" />
+                            <field name="currency_id" />
+                            <field name="move_id" />
+                            <field name="company_id" />
+                            <field name="purchase_to_done" options="{'no_create': True}" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas del documento">
+                            <field name="invoice_line_ids"
+                              widget="one2many"
+                              mode="tree">
+                                <tree editable="bottom">
+                                    <field name="sequence" />
+                                    <field name="document_id" invisible="True" />
+                                    <field name="product_id" />
+                                    <field name="new_product" />
+                                    <field name="quantity" />
+                                    <field name="price_unit" />
+                                    <field name="price_subtotal" />
+                                    <field name="tax_ids" widget="many2many_tags" />
+                                    <field name="ind_exe" optional="hide"/>
+                                    <field name="purchase_line_id" />
+                                    <field name="create_pol" />
+                                    <field name="create_move_line" />
+                                    <field name="currency_id" invisible="True" />
+                                </tree>
+                            </field>
+                            <field
+                                name="global_descuentos_recargos"
+                                widget="one2many_list"
+                                mode="tree"
+                                context="{'default_move_id': active_id}"
+                            >
+                                <tree string="Descuetos / Recargos Globales" editable="bottom">
+                                    <field name="type" />
+                                    <field name="gdr_type" />
+                                    <field name="valor" />
+                                    <field name="gdr_detail" />
+                                    <field name="aplicacion" />
+                                    <field name="impuesto" />
+                                    <field name="account_id"/>
+                                    <field name="amount_untaxed_global_dr" invisible="1" />
+                                    <field name="document_id" invisible="1" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="XML DTE">
+                            <field name="xml" />
+                        </page>
+                        <page string="Registro de Reclamo">
+                            <header>
+                                <button name="get_claim" type="object" string="Get Claim Result" />
+                                <field name='claim' widget="statusbar" />
+                            </header>
+                            <field name="claim_description" />
+                            <field name="claim_ids" readonly="1">
+                                <tree>
+                                    <field name="date" />
+                                    <field name="claim" />
+                                    <field name="estado_dte" />
+                                    <field name="claim_description" />
+                                    <field name="user_id" />
+                                </tree>
+                            </field>
+                            <field name="sii_message" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="dte_document_lines_view_form" model="ir.ui.view">
+        <field name="name">dte.form</field>
+        <field name="model">mail.message.dte.document.line</field>
+        <field name="arch" type="xml">
+            <form string="Mail DTE Process">
+                <sheet>
+                    <group>
+                        <field name="sequence" />
+                        <field name="document_id" />
+                        <field name="product_id" />
+                        <field name="new_product" />
+                        <field name="quantity" />
+                        <field name="price_unit" />
+                        <field name="price_subtotal" />
+                        <field name="currency_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="dte_message_process" model="ir.ui.view">
+        <field name="name">mail.message.form</field>
+        <field name="model">mail.message</field>
+        <field name="inherit_id" ref="mail.mail_message_view_form" />
+        <field name="arch" type="xml">
+            <field name="subject" position="after">
+                <button
+                    name="process_mess"
+                    type="object"
+                    string="Manual XML Process"
+                    attrs="{'invisible': [('message_type', '!=', 'email'), ('mail_server_id', '=', False)]}"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="dte_document_search_view">
+        <field name="name">dte.document.search</field>
+        <field name="model">mail.message.dte.document</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+              <field name="number"/>
+              <group expand="0" string="Group By">
+                  <filter string="Tipo Documento" name="document_class_id" context="{'group_by':'document_class_id'}"/>
+                  <filter string="RUT Proveedor" name="new_partner" context="{'group_by':'new_partner'}"/>
+                  <filter string="Proveedor" name="partner_id" context="{'group_by':'partner_id'}"/>
+                  <filter string="Fecha" name="date" context="{'group_by':'date'}"/>
+              </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dte_process" model="ir.actions.act_window">
+        <field name="name">Aceptar o Rechazar Documentos</field>
+        <field name="domain">[]</field>
+        <field name="res_model">mail.message.dte.document</field>
+        <field name="target">current</field>
+    </record>
+    <record id="act_xml_recept" model="ir.actions.act_window">
+        <field name="name">XML Recibidos</field>
+        <field name="res_model">mail.message.dte</field>
+        <field name="target">current</field>
+    </record>
+    <menuitem id="menu_recept_xml" action="action_dte_process" parent="l10n_cl_fe.menu_sii_exchange" sequence="1" />
+    <menuitem
+        name="XML Recibidos"
+        action="act_xml_recept"
+        id="menu_action_xml_recept"
+        parent="l10n_cl_fe.menu_sii_exchange"
+        sequence="2"
+    />
+</odoo>

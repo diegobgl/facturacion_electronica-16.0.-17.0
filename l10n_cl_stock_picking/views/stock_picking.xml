@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <record id="electronic_stock_picking_tree" model="ir.ui.view">
+            <field name="name">l10n_cl.stock_picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="reference"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_electronic_stock_picking_form" model="ir.ui.view">
+            <field name="name">l10n_cl.stock_picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_td_label')]" position="before">
+                  <field name="use_documents" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" string="Emitir Documento Tributario"/>
+                  <field name="document_class_id" options="{'no_create': True}" attrs="{'required': [('use_documents', '=', True)]}" />
+                  <field name="next_number" attrs="{'invisible': [('use_documents', '=', False)]}" />
+                  <field name="sii_document_number" attrs="{'invisible': ['|', ( 'use_documents', '!=', False), ('document_class_id', '=', False)]}" string="Folio"/>
+                </xpath>
+
+                <field name="partner_id" position="after">
+                    <field name="activity_description" />
+                    <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
+                </field>
+
+                <field name="origin" position="after">
+                  <field name="contact_id" />
+                </field>
+
+                <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='product_uom']" position="after">
+                  <field name="precio_unitario"/>
+                  <field name="price_untaxed" invisible="True" />
+                  <field name="move_line_tax_ids" widget="many2many_tags"  domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]" srting="Impuestos"/>
+                  <field name="discount" string="Descuento"/>
+                  <field name="subtotal"/>
+                  <field name="currency_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']/..//button[@name='action_put_in_pack']" position="after">
+                  <group class="oe_subtotal_footer oe_right">
+                    <field name="amount_untaxed"/>
+                    <field name="amount_tax"/>
+                    <div class="oe_subtotal_footer_separator oe_inline">
+                     </div>
+                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                  </group>
+                </xpath>
+                <page name="extra" position="before">
+                  <page string="Referencias DTE">
+                    <field name="reference" mode="tree" attrs="{'readonly':[('state','in',['cancel','done'])]}">
+                      <form>
+                        <group>
+                          <field name="origen" string="Folio" />
+                          <field name="sii_referencia_TpoDocRef"/>
+                          <field name="date" />
+                        </group>
+                      </form>
+                      <tree editable="bottom">
+                        <field name="origen" />
+                        <field name="sii_referencia_TpoDocRef"/>
+                        <field name="date" />
+                      </tree>
+                    </field>
+                  </page>
+                </page>
+
+                <field name="name" position="after">
+                        <label for="next_number" string="- Next Number: " attrs="{'invisible': ['|',('name','!=',False),('state','!=','draft')]}" class="oe_inline"/>
+                        <field name="next_number" attrs="{'invisible': ['|',('name','!=',False),('state','!=','draft')]}" class="oe_inline"/>
+                </field>
+                <field name="move_type" position="after">
+                  <field name="transport_type" attrs="{'required':[('use_documents', '=', True)]}"/>
+                  <field name="move_reason" attrs="{'required':[('use_documents', '=', True)]}"/>
+                </field>
+                <field name="carrier_id" position="attributes">
+                  <attribute name="attrs">{'invisible':[('transport_type', '!=', '3')], 'required':[('transport_type', '=', '3'), ('use_documents', '=', True)]}</attribute>
+                </field>
+                <field name="carrier_id" position="after">
+                  <field name="vehicle" attrs="{'required':[('transport_type','=', '2'), ('use_documents', '=', True)], 'invisible':[('transport_type','!=','2')]}"/>
+                  <field name="chofer" attrs="{'required':[('transport_type','=', '2'), ('use_documents', '=', True)], 'invisible':[('transport_type','!=','2')]}"/>
+                  <field name="patente" attrs="{'required':[('transport_type','in', ['2']), ('use_documents', '=', True)]}"/>
+                </field>
+                <notebook>
+                    <page string="Facturación Electrónica" name="electronic_document" >
+                        <header>
+                            <button string="Download XML" type="object"  name="get_xml_file"  attrs="{'invisible':['|',('state', 'not in', ['done']),('sii_result','in',['','NoEnviado'])]}"/>
+                            <button string="Send XML" type="object" class="oe_highlight" name="do_dte_send_picking" attrs="{'invisible':['|',('state', 'not in', ['done']),('sii_result', 'not in', ['NoEnviado'])]}"/>
+                            <button string="ReSend XML" type="object" class="oe_highlight" name="do_dte_send_picking" attrs="{'invisible':['|',('state', 'not in', ['done']),('sii_result', 'not in', ['Rechazado'])]}"/>
+                            <button string="Ask for DTE" type="object" class="oe_highlight" name="ask_for_dte_status" attrs="{'invisible':['|',('state', 'not in', ['done']),('sii_result','in',['','NoEnviado'])]}"/>
+                            <field name='sii_result' widget="statusbar"/>
+                        </header>
+                        <group>
+                            <field name="invoiced" />
+                            <field name="responsable_envio" invisible="True" readonly="True"/>
+                            <field name="canceled" />
+                            <field name='sii_batch_number' readonly="1"/>
+                            <field name='sii_xml_request' attrs="{'invisible':[('sii_result', '=', '')]}" readonly="1"/>
+                            <field name='sii_barcode_img' widget="image" attrs="{'invisible':[('sii_result', '=', '')]}" readonly="1"/>
+                            <field name='sii_message' attrs="{'invisible':[('sii_result', 'in', ['','NoEnviado'])]}" readonly="1"/>
+                            <field name='sii_xml_dte' attrs="{'invisible':[('sii_result', '=', '')]}" readonly="1"/>
+                        </group>
+                    </page>
+                </notebook>
+          </field>
+
+        </record>
+
+        <record id="view_move_picking_tree_valued" model="ir.ui.view">
+            <field name="name">stock.move.tree.valued</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_picking_move_tree"/>
+            <field name="arch" type="xml">
+              <field name="product_uom" position="after">
+                <field name="name"/>
+                <field name="precio_unitario"/>
+                <field name="move_line_tax_ids" widget="many2many_tags"  domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+                <field name="discount" />
+                <field name="subtotal"/>
+                <field name="currency_id" invisible="1"/>
+              </field>
+            </field>
+        </record>
+    </data>
+</odoo>

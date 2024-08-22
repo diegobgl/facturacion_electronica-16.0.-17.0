@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+      <xpath expr="//div[hasclass('header-row')]/div[1]" position="before">
+        <div class="col wide">Tipo Documento</div>
+      </xpath>
+      <xpath expr="//div[hasclass('header-row')]/div[hasclass('narrow')]" position="after">
+        <div class="col wide">Estado en el SII</div>
+      </xpath>
+
+      <xpath expr="//div[hasclass('order-row')]/div[1]" position="before">
+        <div class="col wide"><t t-esc="getDC(order)"/></div>
+      </xpath>
+      <xpath expr="//div[hasclass('order-row')]/div[3]" position="replace">
+        <div class="col wide">
+            <div t-if="env.isMobile">Receipt Number</div>
+            <div><t t-esc="getNumber(order)"/></div>
+        </div>
+      </xpath>
+      <xpath expr="//div[hasclass('order-row')]/div[hasclass('narrow')]" position="after">
+        <div class="col wide">
+            <div t-if="env.isMobile">Estado en SII</div>
+            <div><t t-esc="getSIIResult(order)"/></div>
+        </div>
+      </xpath>
+    </t>
+</templates>

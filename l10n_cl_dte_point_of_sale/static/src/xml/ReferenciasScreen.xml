@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ReferenciasScreen" owl="1">
+        <div class="splitbill-screen screen">
+            <div class="contents">
+                <div class="top-content">
+                    <span class="button back" t-on-click="back">
+                        <i class="fa fa-angle-double-left"></i>
+                        <span> </span>
+                        <span>Back</span>
+                    </span>
+                    <button class="button highlight" t-on-click="() => this.trigger('crear-referencia')">Añadir Referencia</button>
+                    <div class="top-content-center">
+                        <h1>Referencias DTE</h1>
+                    </div>
+                </div>
+                <div class="orders">
+                    <t t-set="_referenciasList" t-value="getReferenciasList()" />
+                    <t t-if="_referenciasList.length !== 0">
+                        <div class="header-row" t-att-class="{ oe_hidden: env.isMobile }">
+                            <div class="col wide">Tipo documento</div>
+                            <div class="col">Folio</div>
+                            <div class="col">Tipo Operación</div>
+                            <div class="col wide">Motivo</div>
+                            <div class="col end">Fecha</div>
+                            <div class="col very-narrow" name="delete"></div>
+                        </div>
+                        <t t-foreach="_referenciasList" t-as="line" t-key="line.sequence">
+                            <div class="order-row" t-att-class="{ highlight: isHighlighted(line) }" t-on-click="() => this.trigger('click-line', line)">
+                                <div class="col wide">
+                                    <div t-if="env.isMobile">Tipo Documento</div>
+                                    <div><t t-esc="getDC(line)"></t></div>
+                                </div>
+                                <div class="col">
+                                    <div t-if="env.isMobile">Folio</div>
+                                    <div><t t-esc="getFolio(line)"></t></div>
+                                </div>
+                                <div class="col">
+                                    <div t-if="env.isMobile">Tipo operación</div>
+                                    <div><t t-esc="getTPO(line)"></t></div>
+                                </div>
+                                <div class="col wide">
+                                    <div t-if="env.isMobile">Motivo</div>
+                                    <div><t t-esc="getMotivo(line)"></t></div>
+                                </div>
+                                <div class="col end">
+                                    <div t-if="env.isMobile">Fecha</div>
+                                    <div><t t-esc="getFecha(line)"></t></div>
+                                </div>
+                                <div t-if="!shouldHideDeleteButton(line)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.trigger('delete-line', line)">
+                                    <i class="fa fa-trash" aria-hidden="true"/><t t-if="env.isMobile"> Delete</t>
+                                </div>
+                                <div t-else="" class="col very-narrow"></div>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="empty-order-list">
+                            <i role="img" aria-label="Shopping cart" title="Shopping cart" class="fa fa-shopping-cart"></i>
+                            <h1>No hay referencias aún</h1>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

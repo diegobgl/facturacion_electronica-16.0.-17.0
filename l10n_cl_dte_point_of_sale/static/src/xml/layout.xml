@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="XmlReceipt" t-inherit="pos_xml_receipt.XmlReceipt"  t-inherit-mode="extension">
+      <receipt position="replace">
+        <receipt align='center' width='40' value-thousands-separator='.' >
+          <t t-if='receipt.company.logo'>
+              <img t-att-src='receipt.company.logo' />
+          </t>
+          <t t-if='!receipt.company.logo'>
+            <h3><t t-esc='receipt.company.name' /></h3>
+          </t>
+          <div>
+            <h3><t t-esc="receipt.company.name"/></h3>
+            <h4><t t-esc="receipt.company.document_number"/></h4>
+            <em>
+              <t t-esc="receipt.company.activity_description"/><br />
+              Casa Matriz: <t t-esc="receipt.company.street"/> <t t-esc="receipt.company.city"/><br />
+              <t t-if="receipt.company.sucursal_ids">
+                <t t-foreach="receipt.company.sucursal_ids" t-as="sucursal">
+                    Sucursal: <t t-esc="sucursal.partner_id.street + ', ' + sucursal.partner_id.city_id.name+ ', ' + sucursal.partner_id.city"/>
+                </t>
+              </t>
+            </em>
+            <div class="pos-center-align"><t t-if="receipt.nombre_documento"><t t-esc="receipt.nombre_documento"/> N°:</t><t t-esc="receipt.sii_document_number or receipt.name"/></div>
+          </div>
+          <line><left font='b'>Teléfono: </left><right><t t-esc="receipt.company.phone || ''"/></right></line>
+          <line><left font='b'>Vendedor: </left><right><t t-esc="receipt.cashier"/></right></line>
+          <line><left font='b'>Fecha: </left><right><t t-esc="receipt.creation_date"/></right></line>
+          <t t-if="receipt.client">
+            <line><left font='b'>Cliente: </left><right><span t-esc="receipt.client.name"/></right></line>
+            <line><left font='b'>Rut: </left><right><span t-esc="receipt.client.document_number"/></right></line>
+            <line><left font='b'>Dirección: </left><right><span t-esc="receipt.client.street"/></right></line>
+            <line><left font='b'>Número de identificación: </left><right><span t-esc="receipt.client.id"/></right></line>
+          </t>
+          <t t-if="receipt.header">
+            <div style='text-align:center'>
+                <t t-esc="receipt.header" />
+            </div>
+          </t>
+          <line><right>--------</right></line>
+          <div class='orderlines' line-ratio='0.6'>
+            <t t-foreach='receipt.orderlines' t-as='line'>
+              <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
+              <t t-if='simple'>
+                  <line>
+                      <left><t t-esc='line.product_name_wrapped[0]' /></left>
+                      <right><value t-att-value-decimals='env.pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
+                  </line>
+                  <t t-call="XmlReceiptWrappedProductNameLines"/>
+              </t>
+              <t t-if='!simple'>
+                  <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
+                  <t t-call="XmlReceiptWrappedProductNameLines"/>
+                  <t t-if='line.discount !== 0'>
+                      <line indent='1'><left>Descuento: <t t-esc='line.discount' />%</left></line>
+                  </t>
+                  <line indent='1'>
+                      <left>
+                          <value t-att-value-decimals='env.pos.dp["Product Unit of Measure"]' value-autoint='on'>
+                              <t t-esc='line.quantity' />
+                          </value>
+                          <t t-if='line.unit_name !== "Unit(s)"'>
+                              <t t-esc='line.unit_name' />
+                          </t>
+                          x
+                          <value t-att-value-decimals='env.pos.dp["Product Price"]'>
+                              <t t-esc='line.price' />
+                          </value>
+                      </left>
+                      <right>
+                          <value t-att-value-decimals='env.pos.currency.decimals'><t t-esc='line.price_display' /></value>
+                      </right>
+                  </line>
+              </t>
+            </t>
+          </div>
+          <t t-if='receipt.total_discount'>
+              <line>
+                  <left>Descuentos</left>
+                  <right><t t-esc='env.pos.format_currency(receipt.total_discount)'/></right>
+              </line>
+          </t>
+          <t t-if="receipt.exento !=0">
+            <line><right>--------</right></line>
+            <line class='total'>
+              <left><pre>        Exento</pre></left>
+              <right>$ <value value-decimals='0'><t t-esc='receipt.exento' /></value></right>
+            </line>
+          </t>
+          <t t-if="receipt.total_tax !=0">
+            <line><right>--------</right></line>
+            <t t-foreach="receipt.tax_details" t-as="t">
+              <line class='total' t-if="t.amount > 0">
+                <left><pre>        <t t-esc="t.name"/></pre></left>
+                <right><t t-esc='env.pos.format_currency(t.amount)' /></right>
+              </line>
+            </t>
+          </t>
+          <line><right>--------</right></line>
+          <line class='total'>
+            <left><pre>        TOTAL</pre></left>
+            <right><t t-esc='env.pos.format_currency(receipt.total_with_tax)' /></right>
+          </line>
+          <t t-foreach='paymentlines' t-as='line'>
+            <line>
+              <left><t t-esc='line.name' /></left>
+              <right><value t-att-value-decimals='env.pos.currency.decimals'><t t-esc='line.get_amount()'/></value></right>
+            </line>
+          </t>
+          <line>
+            <left><pre>        Vuelto:</pre></left>
+            <right><t t-esc='env.pos.format_currency(receipt.change)' /></right>
+          </line>
+          <div t-if="receipt.barcode_pdf417">
+            <img t-att-src="receipt.barcode_pdf417"/>
+            <em>
+              <p >
+                Timbre Electrónico SII
+                <br/>
+                Resolución <t t-esc='receipt.company.dte_resolution_number'/> de <t t-esc='receipt.company.dte_resolution_date.slice(0, 4)'/> Verifique documento en:
+                <br />
+                www.sii.cl o en
+                <br />
+                <t t-esc="receipt.company.website +'/boleta/' + receipt.sii_document_number " />
+              </p>
+            </em>
+          </div>
+          <div class='before-footer' />
+          <t t-if="receipt.footer">
+              <br />
+              <div style='text-align:center'>
+                  <t t-esc="receipt.footer" />
+              </div>
+          </t>
+        </receipt>
+      </receipt>
+    </t>
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+      <t t-if="!receipt.company.logo" position="replace">
+        <h3 class="pos-receipt-center-align">
+            <t t-esc="receipt.company.name" />
+            <br/>
+            <t t-esc="receipt.company.document_number"/>
+            <t t-if="receipt.nombre_documento"><br /><t t-esc="receipt.nombre_documento"/><t t-esc="' N°:' + receipt.sii_document_number"/></t>
+        </h3>
+      </t>
+      <t t-if="receipt.company.contact_address" position="replace">
+        <small>
+          <t t-esc="receipt.company.activity_description"/><br />
+          Casa Matriz: <t t-esc="receipt.company.street"/> <t t-esc="receipt.company.city"/><br />
+          <t t-if="receipt.company.sucursal_ids.length > 0">
+            <t t-if="receipt.company.sucursal_ids.length > 1">
+              Sucursales:
+              <t t-foreach="receipt.company.sucursal_ids" t-as="sucursal" t-key="sucursal.id">
+                  <span t-esc="sucursal.display_name"/>/
+              </t>
+            </t>
+            <t t-else="">
+              Sucursal: <span t-esc="receipt.company.sucursal_ids[0].display_name"/><br />
+            </t>
+          </t>
+        </small>
+
+      </t>
+      <t t-if="receipt.company.vat" position="replace">
+        <div />
+      </t>
+      <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
+        <div class="col-xs-12 text-left" t-if="receipt.partner_id">
+            Cliente: <span t-esc="receipt.partner.name"/><br/>
+            Rut: <span t-esc="receipt.partner.document_number"/><br/>
+            Dirección: <span t-esc="receipt.partner.street"/><br/>
+            Número de identificación: <span t-esc="receipt.partner.id"/><br/>
+        </div>
+      </xpath>
+      <t t-if="!isTaxIncluded" position="replace">
+        <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
+            <div t-if="tax.amount > 0">
+                <t t-esc="tax.name" />
+                <span t-esc='env.pos.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+            </div>
+        </t>
+        <!-- Exento -->
+        <div class="pos-receipt-amount" t-if="receipt.exento !=0">
+            Exento:
+            <span t-esc="env.pos.format_currency_no_symbol(receipt.exento)" class="pos-receipt-right-align"/>
+        </div>
+      </t>
+      <t t-if="isTaxIncluded" position="replace">
+        <div class="row" t-if="receipt.barcode_pdf417">
+          <div class="col-xs-12">
+            <img t-att-src="receipt.barcode_pdf417" style="width:100%;height: 150px;"/>
+          </div>
+          <div class="col-xs-12">
+              <p style="text-align:center;color:red; font-size:8px;">
+                Timbre Electrónico SII
+                <br/>
+                Resolución <t t-esc='receipt.company.dte_resolution_number'/> de <t t-esc='receipt.company.dte_resolution_date.slice(0, 4)'/> Verifique documento en:
+                <br />
+                www.sii.cl o en <br />
+                <t t-esc="receipt.company.website + '/boleta/' + receipt.sii_document_number"/>
+              </p>
+          </div>
+        </div>
+      </t>
+    </t>
+
+</templates>

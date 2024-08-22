@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sii_dte_masive_send_wizard_form" model="ir.ui.view">
+            <field name="name">SII WS Consult Wizard form</field>
+            <field name="model">sii.dte.stock_picking.masive_send.wizard</field>
+            <field name="arch" type="xml">
+                <form string="SII DTE masive send Wizard">
+                    <group>
+                        <field name="documentos" widget="one2many">
+                          <tree string="DTes a enviar" editable="top/bottom">
+                            <field name="state" invisble="True" />
+                            <field name="name" />
+                            <field name="origin" />
+                            <field name="amount_total" />
+                            <field name="sii_batch_number" readonly="False" />
+                          </tree>
+                        </field>
+                        <field name="numero_atencion" />
+                        <field name="set_pruebas" />
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="confirm" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_picking_masive_send" model="ir.actions.act_window">
+            <field name="name">Enviar Guías de despacho al SII</field>
+            <field name="res_model">sii.dte.stock_picking.masive_send.wizard</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="sii_dte_masive_send_wizard_form"/>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking" />
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>

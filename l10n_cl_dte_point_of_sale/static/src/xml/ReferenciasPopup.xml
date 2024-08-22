@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ReferenciasPopup" owl="1">
+            <Draggable>
+              <div class="popup popup-selection">
+                  <header class="title drag-handle">
+                      <t t-esc="props.title" />
+                  </header>
+                  <div class="body">
+                      <p>
+                          <t t-esc="props.body" />
+                      </p>
+                      <div class="selection scrollable-y">
+                        <t t-foreach="document_class_ids" t-as="item" t-key="item.id">
+                            <div class="selection-item" t-att-class="{ selected: state.dc_id and (state.dc_id.id == item.id ? true : false)}"
+                                 t-on-click="() => this.selectDC(item)">
+                                <t t-esc="item.name" />
+                            </div>
+                        </t>
+                      </div>
+                      <div>Folio</div>
+
+                      <input type="text" t-model="state.folio" t-ref="input_folio" t-att-placeholder="props.placeholder"/>
+                    <t t-if="is_refund">
+                      <div>Tipo de Operación</div>
+                      <div class="selection scrollable-y">
+                          <t t-foreach="tpo_ops" t-as="item" t-key="item.op">
+                              <div class="selection-item" t-att-class="{ selected: state.tpo_op==item.op}"
+                                   t-on-click="() => this.selectOp(item.op)">
+                                  <t t-esc="item.label" />
+                              </div>
+                          </t>
+                      </div>
+                      <div>Motivo</div>
+                      <input type="text" t-model="state.motivo" t-ref="input_motivo" t-att-placeholder="props.placeholder"/>
+                    </t>
+                      <div>Fecha Documento Referencia</div>
+                      <input type="date" t-model="state.fecha" t-ref="input_fecha" t-att-placeholder="props.placeholder"/>
+                  </div>
+                  <footer class="footer">
+                      <div class="button confirm highlight" t-on-click="confirm">
+                            <t t-esc="props.confirmText" />
+                        </div>
+                      <div class="button cancel" t-on-click="cancel">
+                          <t t-esc="props.cancelText" />
+                      </div>
+                  </footer>
+              </div>
+            </Draggable>
+    </t>
+
+</templates>

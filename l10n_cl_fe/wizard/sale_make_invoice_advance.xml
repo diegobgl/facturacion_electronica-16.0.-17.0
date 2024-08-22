@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Inherit Form view -->
+  <record id="view_sale_advance_payment_inv" model="ir.ui.view">
+    <field name="name">view_sale_advance_payment_inv.form</field>
+    <field name="model">sale.advance.payment.inv</field>
+    <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+    <field name="arch" type="xml">
+      <group position="inside">
+        <field name="sale_order_ids"  options="{'no_create': True}" >
+          <tree create="false" editable="bottom">
+            <field name="name" />
+            <field name="journal_id" />
+            <field name="use_documents" />
+            <field name="document_class_ids" invisible="1" />
+            <field name="journal_document_class_id" options="{'no_create': True}" />
+            <field name="state" />
+          </tree>
+        </field>
+        <field name="referencia_ids" mode="tree">
+            <tree editable="bottom">
+                <field name="so_id" domain="[('id', 'in', active_ids)]"/>
+                <field name="fecha_documento" />
+                <field name="folio" required="True" />
+                <field name="sii_referencia_TpoDocRef" required="True" />
+                <field name="motivo" />
+            </tree>
+            <form>
+              <sheet>
+                <group>
+                  <field name="so_id" domain="[('id', 'in', active_ids)]"/>
+                  <field name="fecha_documento" />
+                  <field name="folio" required="True" />
+                  <field name="sii_referencia_TpoDocRef" required="True" />
+                  <field name="motivo" />
+                </group>
+              </sheet>
+            </form>
+        </field>
+      </group>
+    </field>
+  </record>
+</odoo>
